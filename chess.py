@@ -77,7 +77,35 @@ def load_images():
 
 # luong
 def draw_game_state(screen, board, sq_selected):
-    pass
+    draw_board(screen, sq_selected, board)
+    draw_pieces(screen, board)
+
+
+# luong
+def draw_board(screen, sq_selected, board):
+    colors = [p.Color('#FFCE9E'), p.Color('#D18B47')]
+    color_selected = [p.Color('#CDD16A'), p.Color('#AAA23B')]
+    last_move = None
+    if len(board.move_stack) > 0:
+        last_move = board.move_stack[-1]
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            color = colors[((r + c) % 2)]
+            if (r, c) == sq_selected:
+                color = color_selected[((r + c) % 2)]
+            if last_move is not None and get_sq_id(r, c) in [last_move.from_square, last_move.to_square]:
+                color = color_selected[((r + c) % 2)]
+            p.draw.rect(screen, color, p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
+
+
+# luong
+def draw_pieces(screen, board):
+    for r in range(DIMENSION):
+        for c in range(DIMENSION):
+            sq_id = get_sq_id(r, c)
+            piece = board.piece_map().get(sq_id) #{(63: 'King')}
+            if piece is not None:
+                screen.blit(IMAGES[piece.symbol()], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
 # luong
