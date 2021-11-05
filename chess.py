@@ -2,6 +2,7 @@ from random import randint
 
 import pygame as p
 import chess
+import pygame_menu
 
 WIDTH = HEIGHT = 512
 DIMENSION = 8
@@ -14,11 +15,28 @@ level = 0       # level of AI
 def main():
     p.init()
     screen = p.display.set_mode((WIDTH, HEIGHT))
-    start_the_game(screen)
+    start_menu(screen)
+
+
+# luong
+def start_menu(screen):
+    if screen is None:
+        return
+    menu = pygame_menu.Menu('Chess AI', WIDTH, HEIGHT,
+                            theme=pygame_menu.themes.THEME_DARK)
+    menu.add.selector('Difficulty:', [('Easy', 0), ('Medium', 1), ('Hard', 2)], onchange=set_difficulty)
+    menu.add.button('Play', start_the_game, screen)
+    menu.add.button('Quit', pygame_menu.events.EXIT)
+    menu.mainloop(surface=screen)
+
+
+# luong
+def set_difficulty(value, difficulty):
+    global level
+    level = difficulty
 
 
 def start_the_game(screen):
-    print("start game")
     print("start game")
     clock = p.time.Clock()
     screen.fill(p.Color('white'))
