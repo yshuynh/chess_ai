@@ -110,7 +110,16 @@ def draw_pieces(screen, board):
 
 # luong
 def draw_game_over_screen(screen, winner):
-    pass
+    myfont = p.font.SysFont('arialblack', 40)
+    text_winner = "DRAW!"
+    if winner == chess.WHITE:
+        text_winner = "You win!"
+    elif winner == chess.BLACK:
+        text_winner = "You lose!"
+    text = myfont.render(f'Game Over! {text_winner}', True, (0, 0, 0))
+    text_rect = text.get_rect(center=(WIDTH / 2, HEIGHT / 2))
+    screen.blit(text, text_rect)
+    # p.draw_text(screen, "GAME OVER", 64, WIDTH/2, HEIGHT/2)
 
 
 def make_black_ai_move(board):
