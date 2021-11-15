@@ -89,6 +89,9 @@ def start_the_game(screen):
                     sq_selected = ()
                     player_clicks = []
                     print(board)
+            elif e.type == p.MOUSEBUTTONDOWN and game_over:
+                game_over = False
+                board.reset()
 
         if board.is_checkmate():
             game_over = True
