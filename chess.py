@@ -36,7 +36,32 @@ def start_the_game(screen):
                 pass
             elif e.type == p.MOUSEBUTTONDOWN and not game_over:
                 # handle mouse click
-                pass
+                location = p.mouse.get_pos()
+                col = location[0] // SQ_SIZE
+                row = location[1] // SQ_SIZE
+                if sq_selected == (row, col) or board.turn == chess.BLACK:
+                    sq_selected = ()
+                    player_clicks = []
+                else:
+                    sq_selected = (row, col)
+                    player_clicks.append(sq_selected)
+                if len(player_clicks) == 2:
+                    move = chess.Move(
+                        from_square=get_sq_id(player_clicks[0][0], player_clicks[0][1]),
+                        to_square=get_sq_id(player_clicks[1][0], player_clicks[1][1])
+                    )
+                    move_promotion = chess.Move(
+                        from_square=get_sq_id(player_clicks[0][0], player_clicks[0][1]),
+                        to_square=get_sq_id(player_clicks[1][0], player_clicks[1][1]),
+                        promotion=chess.QUEEN
+                    )
+                    if board.is_legal(move):
+                        board.push(move)
+                    elif board.is_legal(move_promotion):
+                        board.push(move_promotion)
+                    sq_selected = ()
+                    player_clicks = []
+                    print(board)
 
         if board.is_checkmate():
             game_over = True
