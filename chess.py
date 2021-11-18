@@ -1,3 +1,5 @@
+from random import randint
+
 import pygame as p
 import chess
 
@@ -148,19 +150,22 @@ def draw_game_over_screen(screen, winner):
 
 
 def make_black_ai_move(board):
-    if level == 0:
-        board.push(calculate_best_move(board))
-    elif level == 1:
-        board.push(calculate_best_move_minimax(1, board, True))
-    elif level == 2:
-        board.push(calculate_best_move_minimax(3, board, True))
-    else:
-        calculate_rand_move(board)
+    # if level == 0:
+    #     board.push(calculate_best_move(board))
+    # elif level == 1:
+    #     board.push(calculate_best_move_minimax(1, board, True))
+    # elif level == 2:
+    #     board.push(calculate_best_move_minimax(3, board, True))
+    # else:
+    calculate_rand_move(board)
 
 
 # minh
 def calculate_rand_move(board):
-    pass
+    legal_moves = list(board.legal_moves)
+    if len(legal_moves) == 0:
+        print("Black has no move.")
+    return legal_moves[randint(0, len(legal_moves) - 1)]
 
 
 # minh
