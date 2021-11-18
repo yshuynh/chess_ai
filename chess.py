@@ -35,7 +35,10 @@ def start_the_game(screen):
                 running = False
             elif e.type == p.KEYDOWN and not game_over:
                 # handle undo
-                pass
+                if e.key == p.K_z:
+                    if len(board.move_stack) > 1:
+                        board.pop()
+                        board.pop()
             elif e.type == p.MOUSEBUTTONDOWN and not game_over:
                 # handle mouse click
                 location = p.mouse.get_pos()
