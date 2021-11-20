@@ -27,6 +27,10 @@ def start_menu(screen):
     menu.add.selector('Difficulty:', [('Easy', 0), ('Medium', 1), ('Hard', 2)], onchange=set_difficulty)
     menu.add.button('Play', start_the_game, screen)
     menu.add.button('Quit', pygame_menu.events.EXIT)
+    how_to_play = '\n HOW TO PLAY'
+    how_to_play_text = '- Use mouse left click to move piece\n- Press Z to undo move\n- Click X to back to menu in-game'
+    menu.add.label(how_to_play, max_char=-1, font_size=20)
+    menu.add.label(how_to_play_text, max_char=-1, font_size=14)
     menu.mainloop(surface=screen)
 
 
