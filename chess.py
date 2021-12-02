@@ -175,14 +175,14 @@ def draw_game_over_screen(screen, winner):
 
 
 def make_black_ai_move(board):
-    # if level == 0:
-    #     board.push(calculate_best_move(board))
-    # elif level == 1:
-    #     board.push(calculate_best_move_minimax(1, board, True))
-    # elif level == 2:
-    #     board.push(calculate_best_move_minimax(3, board, True))
+    if level == 0:
+        board.push(calculate_best_move(board))
+    elif level == 1:
+        board.push(calculate_best_move_minimax(1, board, True))
+    elif level == 2:
+        board.push(calculate_best_move_minimax(3, board, True))
     # else:
-    calculate_rand_move(board)
+    # calculate_rand_move(board)
 
 
 # minh
@@ -195,7 +195,48 @@ def calculate_rand_move(board):
 
 # minh
 def calculate_best_move(board):
-    pass
+    new_game_moves = board.legal_moves
+    best_value = -9999
+    list_value = []
+    for newGameMove in new_game_moves:
+        board.push(newGameMove)
+        # take the negative as AI plays as black
+        board_value = -evaluate_board_easy_mode(board)
+        board.pop()
+        if board_value > best_value:
+            best_value = board_value
+            best_move = newGameMove
+            list_value = [(best_value, best_move)]
+        elif board_value == best_value:
+            list_value.append((board_value, newGameMove))
+    return list_value[randint(0, len(list_value) - 1)][1]
+
+
+# minh
+def evaluate_board_easy_mode(board):
+    total_evaluation = 0
+    piece_map = board.piece_map()
+    for index in piece_map:
+        total_evaluation = total_evaluation + get_piece_value_easy_mode(piece_map.get(index))
+    return total_evaluation
+
+
+#  minh
+def get_piece_value_easy_mode(piece):
+    if piece is None:
+        return 0
+    piece_value = {
+        chess.PAWN: 10,
+        chess.ROOK: 50,
+        chess.KNIGHT: 30,
+        chess.BISHOP: 30,
+        chess.QUEEN: 90,
+        chess.KING: 900
+    }
+    value = piece_value[piece.piece_type]
+    if piece.color == chess.BLACK:
+        value = -value
+    return value
 
 
 # ys
