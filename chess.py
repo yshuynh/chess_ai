@@ -239,9 +239,162 @@ def get_piece_value_easy_mode(piece):
     return value
 
 
+
 # ys
 def calculate_best_move_minimax(depth, board, is_maximising_player):
-    pass
+    new_game_moves = board.legal_moves
+    best_move = -9999
+    list_value = []
+
+    for newGameMove in new_game_moves:
+        board.push(newGameMove)
+        value = minimax(depth - 1, board, -10000, 10000, not is_maximising_player)
+        board.pop()
+        if value > best_move:
+            best_move = value
+            best_move_found = newGameMove
+            list_value = [(best_move, best_move_found)]
+        elif value == best_move:
+            list_value.append((value, newGameMove))
+    return list_value[randint(0, len(list_value) - 1)][1]
+
+
+#ys
+def minimax(depth, board, alpha, beta, is_maximising_player):
+    if depth == 0:
+        return -evaluate_board_hard_mode(board)
+
+    new_game_moves = board.legal_moves
+
+    if is_maximising_player:
+        best_move = -9999
+        for newGameMove in new_game_moves:
+            board.push(newGameMove)
+            best_move = max(best_move, minimax(depth - 1, board, alpha, beta, not is_maximising_player))
+            board.pop()
+            alpha = max(alpha, best_move)
+            if beta <= alpha:
+                return best_move
+        return best_move
+    else:
+        best_move = 9999
+        for newGameMove in new_game_moves:
+            board.push(newGameMove)
+            best_move = min(best_move, minimax(depth - 1, board, alpha, beta, not is_maximising_player))
+            board.pop()
+            beta = min(beta, best_move)
+            if beta <= alpha:
+                return best_move
+        return best_move
+
+
+# ys
+def evaluate_board_hard_mode(board):
+    total_evaluation = 0
+    piece_map = board.piece_map()
+    for index in piece_map:
+        r, c = get_row_col(index)
+        total_evaluation = total_evaluation + get_piece_value_hard_mode(piece_map.get(index), r, c)
+    return total_evaluation
+
+
+pawnEvalWhite = [
+    [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
+    [5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0,  5.0],
+    [1.0,  1.0,  2.0,  3.0,  3.0,  2.0,  1.0,  1.0],
+    [0.5,  0.5,  1.0,  2.5,  2.5,  1.0,  0.5,  0.5],
+    [0.0,  0.0,  0.0,  2.0,  2.0,  0.0,  0.0,  0.0],
+    [0.5, -0.5, -1.0,  0.0,  0.0, -1.0, -0.5,  0.5],
+    [0.5,  1.0, 1.0,  -2.0, -2.0,  1.0,  1.0,  0.5],
+    [0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0]
+]
+
+pawnEvalBlack = pawnEvalWhite[::-1]
+
+knightEval = [
+    [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0],
+    [-4.0, -2.0,  0.0,  0.0,  0.0,  0.0, -2.0, -4.0],
+    [-3.0,  0.0,  1.0,  1.5,  1.5,  1.0,  0.0, -3.0],
+    [-3.0,  0.5,  1.5,  2.0,  2.0,  1.5,  0.5, -3.0],
+    [-3.0,  0.0,  1.5,  2.0,  2.0,  1.5,  0.0, -3.0],
+    [-3.0,  0.5,  1.0,  1.5,  1.5,  1.0,  0.5, -3.0],
+    [-4.0, -2.0,  0.0,  0.5,  0.5,  0.0, -2.0, -4.0],
+    [-5.0, -4.0, -3.0, -3.0, -3.0, -3.0, -4.0, -5.0]
+]
+
+bishopEvalWhite = [
+    [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0],
+    [-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
+    [-1.0,  0.0,  0.5,  1.0,  1.0,  0.5,  0.0, -1.0],
+    [-1.0,  0.5,  0.5,  1.0,  1.0,  0.5,  0.5, -1.0],
+    [-1.0,  0.0,  1.0,  1.0,  1.0,  1.0,  0.0, -1.0],
+    [-1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0, -1.0],
+    [-1.0,  0.5,  0.0,  0.0,  0.0,  0.0,  0.5, -1.0],
+    [-2.0, -1.0, -1.0, -1.0, -1.0, -1.0, -1.0, -2.0]
+]
+
+bishopEvalBlack = bishopEvalWhite[::-1]
+
+rookEvalWhite = [
+    [ 0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0],
+    [ 0.5,  1.0,  1.0,  1.0,  1.0,  1.0,  1.0,  0.5],
+    [-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
+    [-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
+    [-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
+    [-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
+    [-0.5,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -0.5],
+    [ 0.0,  0.0,  0.0,  0.5,  0.5,  0.0,  0.0,  0.0]
+]
+
+rookEvalBlack = rookEvalWhite[::-1]
+
+evalQueen = [
+    [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0],
+    [-1.0,  0.0,  0.0,  0.0,  0.0,  0.0,  0.0, -1.0],
+    [-1.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
+    [-0.5,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
+    [ 0.0,  0.0,  0.5,  0.5,  0.5,  0.5,  0.0, -0.5],
+    [-1.0,  0.5,  0.5,  0.5,  0.5,  0.5,  0.0, -1.0],
+    [-1.0,  0.0,  0.5,  0.0,  0.0,  0.0,  0.0, -1.0],
+    [-2.0, -1.0, -1.0, -0.5, -0.5, -1.0, -1.0, -2.0]
+]
+
+kingEvalWhite = [
+    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+    [-3.0, -4.0, -4.0, -5.0, -5.0, -4.0, -4.0, -3.0],
+    [-2.0, -3.0, -3.0, -4.0, -4.0, -3.0, -3.0, -2.0],
+    [-1.0, -2.0, -2.0, -2.0, -2.0, -2.0, -2.0, -1.0],
+    [ 2.0,  2.0,  0.0,  0.0,  0.0,  0.0,  2.0,  2.0],
+    [ 2.0,  3.0,  1.0,  0.0,  0.0,  1.0,  3.0,  2.0]
+]
+
+kingEvalBlack = kingEvalWhite[::-1]
+
+
+# ys
+def get_piece_value_hard_mode(piece, x, y):
+    if piece is None:
+        return 0
+    absolute_value = 0
+    if piece.piece_type == chess.PAWN:
+        absolute_value = 10 + (pawnEvalWhite[y][x] if piece.color == chess.WHITE else pawnEvalBlack[y][x])
+    elif piece.piece_type == chess.ROOK:
+        absolute_value = 50 + (rookEvalWhite[y][x] if piece.color == chess.WHITE else rookEvalBlack[y][x])
+    elif piece.piece_type == chess.KNIGHT:
+        absolute_value = 30 + knightEval[y][x]
+    elif piece.piece_type == chess.BISHOP:
+        absolute_value = 30 + (bishopEvalWhite[y][x] if piece.color == chess.WHITE else bishopEvalBlack[y][x])
+    elif piece.piece_type == chess.QUEEN:
+        absolute_value = 90 + evalQueen[y][x]
+    elif piece.piece_type == chess.KING:
+        absolute_value = 900 + (kingEvalWhite[y][x] if piece.color == chess.WHITE else kingEvalBlack[y][x])
+    else:
+        print("Error: Dont know piece type!")
+        exit()
+
+    return absolute_value if piece.color == chess.WHITE else -absolute_value
 
 
 if __name__ == '__main__':
