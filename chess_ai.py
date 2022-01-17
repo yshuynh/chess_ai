@@ -1,5 +1,4 @@
 from random import randint
-
 import pygame as p
 import chess
 import pygame_menu
@@ -18,7 +17,6 @@ def main():
     start_menu(screen)
 
 
-# luong
 def start_menu(screen):
     if screen is None:
         return
@@ -34,7 +32,6 @@ def start_menu(screen):
     menu.mainloop(surface=screen)
 
 
-# luong
 def set_difficulty(value, difficulty):
     global level
     level = difficulty
@@ -95,7 +92,6 @@ def start_the_game(screen):
 
         if board.is_checkmate():
             game_over = True
-            # print("winner: ", board.outcome().winner)
             print("Game Over! Winner: ", "WHITE" if board.turn == chess.WHITE else "BLACK")
             winner = not board.turn
         draw_game_state(screen, board, sq_selected)
@@ -130,13 +126,11 @@ def load_images():
         IMAGES[piece] = p.image.load(file_path)
 
 
-# luong
 def draw_game_state(screen, board, sq_selected):
     draw_board(screen, sq_selected, board)
     draw_pieces(screen, board)
 
 
-# luong
 def draw_board(screen, sq_selected, board):
     colors = [p.Color('#FFCE9E'), p.Color('#D18B47')]
     color_selected = [p.Color('#CDD16A'), p.Color('#AAA23B')]
@@ -153,7 +147,6 @@ def draw_board(screen, sq_selected, board):
             p.draw.rect(screen, color, p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
-# luong
 def draw_pieces(screen, board):
     for r in range(DIMENSION):
         for c in range(DIMENSION):
@@ -163,7 +156,6 @@ def draw_pieces(screen, board):
                 screen.blit(IMAGES[piece.symbol()], p.Rect(c*SQ_SIZE, r*SQ_SIZE, SQ_SIZE, SQ_SIZE))
 
 
-# luong
 def draw_game_over_screen(screen, winner):
     myfont = p.font.SysFont('arialblack', 40)
     text_winner = "DRAW!"
@@ -188,7 +180,6 @@ def make_black_ai_move(board):
     # calculate_rand_move(board)
 
 
-# minh
 def calculate_rand_move(board):
     legal_moves = list(board.legal_moves)
     if len(legal_moves) == 0:
@@ -196,7 +187,6 @@ def calculate_rand_move(board):
     return legal_moves[randint(0, len(legal_moves) - 1)]
 
 
-# minh
 def calculate_best_move(board):
     new_game_moves = board.legal_moves
     best_value = -9999
@@ -215,7 +205,6 @@ def calculate_best_move(board):
     return list_value[randint(0, len(list_value) - 1)][1]
 
 
-# minh
 def evaluate_board_easy_mode(board):
     total_evaluation = 0
     piece_map = board.piece_map()
@@ -224,7 +213,6 @@ def evaluate_board_easy_mode(board):
     return total_evaluation
 
 
-#  minh
 def get_piece_value_easy_mode(piece):
     if piece is None:
         return 0
@@ -242,8 +230,6 @@ def get_piece_value_easy_mode(piece):
     return value
 
 
-
-# ys
 def calculate_best_move_minimax(depth, board, is_maximising_player):
     new_game_moves = board.legal_moves
     best_move = -9999
@@ -262,7 +248,6 @@ def calculate_best_move_minimax(depth, board, is_maximising_player):
     return list_value[randint(0, len(list_value) - 1)][1]
 
 
-#ys
 def minimax(depth, board, alpha, beta, is_maximising_player):
     if depth == 0:
         return -evaluate_board_hard_mode(board)
@@ -291,7 +276,6 @@ def minimax(depth, board, alpha, beta, is_maximising_player):
         return best_move
 
 
-# ys
 def evaluate_board_hard_mode(board):
     total_evaluation = 0
     piece_map = board.piece_map()
@@ -376,7 +360,6 @@ kingEvalWhite = [
 kingEvalBlack = kingEvalWhite[::-1]
 
 
-# ys
 def get_piece_value_hard_mode(piece, x, y):
     if piece is None:
         return 0
