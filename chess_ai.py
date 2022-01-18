@@ -87,10 +87,9 @@ def start_the_game(screen):
                     player_clicks = []
                     print(board)
             elif e.type == p.MOUSEBUTTONDOWN and game_over:
-                game_over = False
-                board.reset()
+                running = False
 
-        if board.is_checkmate():
+        if board.outcome() is not None:
             game_over = True
             print("Game Over! Winner: ", "WHITE" if board.turn == chess.WHITE else "BLACK")
             winner = not board.turn
