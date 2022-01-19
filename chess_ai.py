@@ -13,6 +13,7 @@ level = 0       # level of AI
 
 def main():
     p.init()
+    p.display.set_caption('Chess AI')
     screen = p.display.set_mode((WIDTH, HEIGHT))
     start_menu(screen)
 
